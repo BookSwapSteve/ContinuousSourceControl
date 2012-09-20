@@ -1,6 +1,20 @@
-# Build Folders (you can keep bin if you'd like, to store dlls and pdbs)
 bin
 obj
-
-# mstest test results
-TestResults
+*.user
+*.suo
+*.log
+*.bak
+*.ncrunchproject
+*.ncrunchsolution
+*.crunchproject.local.xml
+*.crunchsolution.local.xml
+*.crunchsolution.cache
+*.dotCover
+desktop.ini
+Thumbs.db
+AnalysisUK.ExchangeRates.Web/App_Data/Log.txt
+Debug/
+Release/
+Build/
+Deploy/
+_ReSharper*/
