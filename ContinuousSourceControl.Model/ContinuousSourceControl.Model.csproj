@@ -39,10 +39,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Domain\BinaryFileContent.cs" />
+    <Compile Include="Domain\DeletedFileContent.cs" />
     <Compile Include="Domain\DomainEntityBase.cs" />
     <Compile Include="Domain\ProjectFile.cs" />
     <Compile Include="Domain\FileContent.cs" />
     <Compile Include="Domain\Project.cs" />
+    <Compile Include="Domain\RenamedFileContent.cs" />
+    <Compile Include="Domain\StringFileContent.cs" />
+    <Compile Include="Helpers\FilterHelper.cs" />
+    <Compile Include="Helpers\FindFilesPatternToRegex.cs" />
+    <Compile Include="Helpers\IFileFilter.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

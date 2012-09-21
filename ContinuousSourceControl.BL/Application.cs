@@ -26,6 +26,9 @@ namespace ContinuousSourceControl.BL
 
         public Project CreateProject(string name, string path)
         {
+            if (name == null) throw new ArgumentNullException("name");
+            if (path == null) throw new ArgumentNullException("path");
+
             var project = new Project { Name = name, PathRoot = path };
             _repository.Save(project);
             return project;

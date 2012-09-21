@@ -47,6 +47,20 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ContinuousSourceControl.BL\ContinuousSourceControl.BL.csproj">
+      <Project>{6f16a2b7-4e50-43c0-815b-94cfb07e4b7e}</Project>
+      <Name>ContinuousSourceControl.BL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ContinuousSourceControl.DataAccess.RavenDB\ContinuousSourceControl.DataAccess.RavenDB.csproj">
+      <Project>{0a946417-82e9-4c71-b614-d5a25b156a8a}</Project>
+      <Name>ContinuousSourceControl.DataAccess.RavenDB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ContinuousSourceControl.Model\ContinuousSourceControl.Model.csproj">
+      <Project>{204D750D-94D5-4212-9D67-BF0702508EB3}</Project>
+      <Name>ContinuousSourceControl.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
