@@ -1,18 +1,28 @@
 ﻿using System.IO;
 using System.Linq;
+using ContinuousSourceControl.Model.Logging;
 
 namespace ContinuousSourceControl.Model.Domain.Changes
 {
-    public class BinaryFileContent : FileContent
+    public class BinaryFileContent : FileContentsChangedEvent
     {
         public byte[] FileContents { get; set; }
 
-        public override void Load(string fromFile)
+        protected override bool LoadContents(string fromFile)
         {
-            FileContents = File.ReadAllBytes(fromFile);
+            try
+            {
+                FileContents = File.ReadAllBytes(fromFile);
+                return true;
+            }
+            catch (IOException exception)
+            {
+                Logger.Error("IOException trying to load contents from {0}. {1}", fromFile, exception);
+                return false;
+            }
         }
 
-        public bool IsTextFile ()
+        public bool IsTextFile()
         {
             int nullCount = 0;
 
@@ -22,7 +32,7 @@ namespace ContinuousSourceControl.Model.Domain.Changes
             {
                 if (b == 0)
                 {
-                    nullCount ++;
+                    nullCount++;
 
                     if (nullCount > 20)
                     {
