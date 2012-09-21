@@ -5,6 +5,6 @@ namespace ContinuousSourceControl.BL.Interfaces
 {
     public interface IWatcherFactory
     {
-        IWatcher Create(IRepository repository, Project project);
+        IWatcher Create(IRepository repository, IFileChangeBL fileChangeBL, Project project);
     }
 }

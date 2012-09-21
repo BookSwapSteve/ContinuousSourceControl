@@ -12,18 +12,21 @@ namespace ContinuousSourceControl.BL
     public class Watcher : IWatcher, IDisposable
     {
         private readonly IRepository _repository;
+        private readonly IFileChangeBL _fileChangeBl;
         private readonly Project _project;
         private FileSystemWatcher _fileSystemWatcher;
         private bool _disposed = false;
         
         private FilterHelper _filterHelper;
 
-        public Watcher(IRepository repository, Project project)
+        public Watcher(IRepository repository,IFileChangeBL fileChangeBl, Project project)
         {
             if (repository == null) throw new ArgumentNullException("repository");
+            if (fileChangeBl == null) throw new ArgumentNullException("fileChangeBl");
             if (project == null) throw new ArgumentNullException("project");
 
             _repository = repository;
+            _fileChangeBl = fileChangeBl;
             _project = project;
 
             _fileSystemWatcher = new FileSystemWatcher(project.PathRoot)

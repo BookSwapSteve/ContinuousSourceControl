@@ -38,9 +38,12 @@ namespace ContinuousSourceControl.BL
 
         public void Start(string projectName)
         {
-            Project project = _repository.LoadProject(projectName);
+            // TODO: Should scan all the files in the project folder
+            // and create an initial entry.
 
-            _fileWatcher = _fileWatcherFactory.Create(_repository, project);
+            Project project = _repository.LoadProject(projectName);
+            IFileChangeBL fileChangeBL = new FileChangeBL();
+            _fileWatcher = _fileWatcherFactory.Create(_repository, fileChangeBL, project);
             _fileWatcher.Start();
         }
 

@@ -6,9 +6,9 @@ namespace ContinuousSourceControl.BL
 {
     public class WatcherFactory : IWatcherFactory
     {
-        public IWatcher Create(IRepository repository, Project project)
+        public IWatcher Create(IRepository repository, IFileChangeBL fileChangeBL, Project project)
         {
-            return new Watcher(repository, project);
+            return new Watcher(repository, fileChangeBL, project);
         }
     }
 }
