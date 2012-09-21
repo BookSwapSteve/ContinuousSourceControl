@@ -18,6 +18,7 @@ namespace ContinuousSourceControl.Model.Domain.Changes
                 // the file being exclusivly locked.
                 Thread.Sleep(250);
             }
+            // TODO: Throw an exception as the file contents were not loaded.
         }
 
         protected abstract bool LoadContents(string fromFile);
