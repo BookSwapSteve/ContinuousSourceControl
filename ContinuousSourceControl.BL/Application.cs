@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using ContinuousSourceControl.BL.Interfaces;
 using ContinuousSourceControl.DataAccess.RavenDB.Interfaces;
 using ContinuousSourceControl.Model.Domain;
+using ContinuousSourceControl.Model.Domain.Changes;
 
 namespace ContinuousSourceControl.BL
 {
@@ -40,6 +42,21 @@ namespace ContinuousSourceControl.BL
 
             _fileWatcher = _fileWatcherFactory.Create(_repository, project);
             _fileWatcher.Start();
+        }
+
+        public IList<ProjectFile> GetFiles(string projectName)
+        {
+            if (projectName == null) throw new ArgumentNullException("projectName");
+
+            Project project = _repository.LoadProject(projectName);
+            return _repository.LoadFiles(project);
+        }
+
+        public IList<FileContent> GetFileContents(ProjectFile projectFile)
+        {
+            if (projectFile == null) throw new ArgumentNullException("projectFile");
+
+            return _repository.LoadFileContents(projectFile);
         }
     }
 }

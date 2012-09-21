@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 
-namespace ContinuousSourceControl.Model.Domain
+namespace ContinuousSourceControl.Model.Domain.Changes
 {
     public class BinaryFileContent : FileContent
     {

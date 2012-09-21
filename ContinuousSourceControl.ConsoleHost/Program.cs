@@ -1,13 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using ContinuousSourceControl.BL;
 using ContinuousSourceControl.DataAccess.RavenDB;
 using ContinuousSourceControl.DataAccess.RavenDB.Interfaces;
 using ContinuousSourceControl.Model.Domain;
+using ContinuousSourceControl.Model.Domain.Changes;
 
 namespace ContinuousSourceControl.ConsoleHost
 {
     class Program
     {
+        private static Application _application;
+
         // Expect arguments as -path=<> -project=<>
         static void Main(string[] args)
         {
@@ -38,19 +42,54 @@ namespace ContinuousSourceControl.ConsoleHost
                 RunApplication(projectName, path);
             }
 
-            Console.WriteLine("Press any key to exit.");
-            Console.ReadLine();
+            Console.WriteLine("Press enter to exit, or l to list files.");
+
+            ConsoleKeyInfo key;
+            do
+            {
+                key = Console.ReadKey();
+                Console.WriteLine();
+
+                switch(key.Key)
+                {
+                    case ConsoleKey.L:
+                        Console.WriteLine("-----------------------------------------------------------");
+                        ListFiles(projectName);
+                        Console.WriteLine("===========================================================");
+                        Console.WriteLine();
+                        break;
+                }
+            } while (key.Key != ConsoleKey.Enter);
+        }
+
+        private static void ListFiles(string projectName)
+        {
+            IList<ProjectFile> projectFiles = _application.GetFiles(projectName);
+
+            foreach (var projectFile in projectFiles)
+            {
+                IList<FileContent> fileContents = _application.GetFileContents(projectFile);
+
+                Console.WriteLine("File: " + projectFile.FilePath);
+                Console.WriteLine("Changes: " + fileContents.Count);
+
+                foreach (var fileContent in fileContents)
+                {
+                    Console.WriteLine("Version: " + fileContent.Version + ", Change: " + fileContent.ChangeType);
+                }
+            }
+            
         }
 
         private static void RunApplication(string projectName, string path)
         {
             IRepository repository = new MemoryRepository();
-            var application = new Application(repository, new WatcherFactory());
-            Project project = application.CreateProject(projectName, path);
+            _application = new Application(repository, new WatcherFactory());
+            Project project = _application.CreateProject(projectName, path);
             Console.WriteLine("Created project: " + project.Id);
 
             Console.WriteLine("Watching project folder...");
-            application.Start(project.Name);
+            _application.Start(project.Name);
         }
     }
 }

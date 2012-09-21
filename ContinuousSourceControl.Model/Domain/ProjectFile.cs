@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ContinuousSourceControl.Model.Domain.Changes;
 
 namespace ContinuousSourceControl.Model.Domain
 {
@@ -37,7 +38,7 @@ namespace ContinuousSourceControl.Model.Domain
         /// </summary>
         /// <param name="changeType"> </param>
         /// <returns>Returns a versioned FileContent object that should then be stored in the database.</returns>
-        public FileContent Create(WatcherChangeTypes changeType)
+        public FileContent Change(WatcherChangeTypes changeType)
         {
             FileContent fileContent;
             switch (changeType)
@@ -54,7 +55,36 @@ namespace ContinuousSourceControl.Model.Domain
 
             UpdateVersionNumber(fileContent);
             fileContent.ChangeType = changeType;
+            fileContent.FileId = Id;
 
+            return fileContent;
+        }
+
+        /// <summary>
+        /// File has been renamed to a new file.
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <returns></returns>
+        public RenamedFileContent RenamedTo(string fullPath)
+        {
+            var fileContent = new RenamedFileContent();
+            fileContent.RenamedTo(fullPath);
+            UpdateVersionNumber(fileContent);
+            fileContent.FileId = Id;
+            return fileContent;
+        }
+
+        /// <summary>
+        /// File has come from a previous file.
+        /// </summary>
+        /// <param name="oldFullPath"></param>
+        /// <returns></returns>
+        public RenamedFileContent RenamedFrom(string oldFullPath)
+        {
+            var fileContent = new RenamedFileContent();
+            fileContent.RenamedFrom(oldFullPath);
+            UpdateVersionNumber(fileContent);
+            fileContent.FileId = Id;
             return fileContent;
         }
 
@@ -66,40 +96,28 @@ namespace ContinuousSourceControl.Model.Domain
 
         private FileContent GetChangedFileContent()
         {
-            FileContent fileContent;
-            var binaryFileContent = new BinaryFileContent();
-            binaryFileContent.Load(FilePath);
-            int fileSize = binaryFileContent.FileContents.Length;
-
-            if (binaryFileContent.IsTextFile())
+            if (File.Exists(FilePath))
             {
-                fileContent = new StringFileContent();
-                fileContent.Load(FilePath);
+                var binaryFileContent = new BinaryFileContent();
+                binaryFileContent.Load(FilePath);
+                int fileSize = binaryFileContent.FileContents.Length;
+
+                FileContent fileContent;
+                if (binaryFileContent.IsTextFile())
+                {
+                    fileContent = new StringFileContent();
+                    fileContent.Load(FilePath);
+                }
+                else
+                {
+                    fileContent = binaryFileContent;
+                }
+
+                fileContent.LastWriteTime = File.GetLastWriteTime(FilePath);
+                fileContent.FileSize = fileSize;
+                return fileContent;
             }
-            else
-            {
-                fileContent = binaryFileContent;
-            }
-
-            fileContent.LastWriteTime = File.GetLastWriteTime(FilePath);
-            fileContent.FileSize = fileSize;
-            return fileContent;
-        }
-
-        public RenamedFileContent RenamedTo(string fullPath)
-        {
-            var fileContent = new RenamedFileContent();
-            fileContent.RenamedTo(fullPath);
-            UpdateVersionNumber(fileContent);
-            return fileContent;
-        }
-
-        public RenamedFileContent RenamedFrom(string oldFullPath)
-        {
-            var fileContent = new RenamedFileContent();
-            fileContent.RenamedFrom(oldFullPath);
-            UpdateVersionNumber(fileContent);
-            return fileContent;
+            return new DirectoryContent();
         }
     }
 }

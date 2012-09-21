@@ -3,6 +3,7 @@ using System.IO;
 using ContinuousSourceControl.BL.Interfaces;
 using ContinuousSourceControl.DataAccess.RavenDB.Interfaces;
 using ContinuousSourceControl.Model.Domain;
+using ContinuousSourceControl.Model.Domain.Changes;
 using ContinuousSourceControl.Model.Helpers;
 using ContinuousSourceControl.Model.Logging;
 
@@ -70,7 +71,7 @@ namespace ContinuousSourceControl.BL
             if (!_filterHelper.IsMatch(e.FullPath))
             {
                 ProjectFile file = LoadOrCreateFile(e.FullPath);
-                FileContent fileContent = file.Create(e.ChangeType);
+                FileContent fileContent = file.Change(e.ChangeType);
 
                 _repository.Save(file);
                 _repository.Save(fileContent);
@@ -99,6 +100,8 @@ namespace ContinuousSourceControl.BL
         void fileSystemWatcher_Renamed(object sender, RenamedEventArgs e)
         {
             Logger.Info("Renamed {0} to {1}", e.OldFullPath, e.FullPath);
+            // TODO: Handle folder name change, all files under it neeed to be updated.
+
             // Mark the old file as renamed.
             // Start a new file entry, at the version of the old one.
             // Point the two files at each other.

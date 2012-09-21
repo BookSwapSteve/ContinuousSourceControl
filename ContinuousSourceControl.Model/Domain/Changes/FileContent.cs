@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace ContinuousSourceControl.Model.Domain
+namespace ContinuousSourceControl.Model.Domain.Changes
 {
     /// <summary>
     /// Represents the actual file contents of the file being versioned and the meta data associated with the file.
@@ -17,18 +17,8 @@ namespace ContinuousSourceControl.Model.Domain
         public WatcherChangeTypes ChangeType { get; set; }
         public long FileSize { get; set; }
 
-        // TODO: Make a specific FileContent type for this?
-
-
         public abstract void Load(string fromFile);
 
         public DateTime LastWriteTime { get; set; }
-
- 
-
-        
-
-
-        
     }
 }

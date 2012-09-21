@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace ContinuousSourceControl.Model.Domain
+namespace ContinuousSourceControl.Model.Domain.Changes
 {
     public class RenamedFileContent : FileContent
     {
